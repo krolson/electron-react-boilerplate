@@ -12,6 +12,7 @@
  */
 import { app, BrowserWindow } from 'electron';
 import MenuBuilder from './menu';
+import { start } from 'repl';
 
 let mainWindow = null;
 
@@ -40,6 +41,33 @@ const installExtensions = async () => {
   ).catch(console.log);
 };
 
+const os = require('os');
+var apiProcess = null;
+
+function startApi() {
+  var proc = require('child_process').spawn;
+  //  run server
+  var apipath = path.join(__dirname, '..\\api\\bin\\dist\\win\\api.exe')
+//  if (os.platform() === 'darwin') {
+//    apipath = path.join(__dirname, '..//api//bin//dist//osx//Api')
+//  }
+  apiProcess = proc(apipath)
+
+  apiProcess.stdout.on('data', (data) => {
+    console.log(`stdout: ${data}`);
+    //if (mainWindow == null) {
+     // createWindow();
+    //}
+  });
+}
+
+//Kill process when electron exits
+//app.on('exit', function () {
+//  writeLog('exit');
+//  apiProcess.kill();
+//});
+
+
 /**
  * Add event listeners...
  */
@@ -50,6 +78,7 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit();
   }
+  //apiProcess.kill();
 });
 
 app.on('ready', async () => {
@@ -88,4 +117,5 @@ app.on('ready', async () => {
 
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();
+ // startApi();
 });

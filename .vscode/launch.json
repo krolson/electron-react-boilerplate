@@ -1,0 +1,54 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Debug Main Process",
+        "type": "node",
+        "request": "launch",
+        "cwd": "${workspaceRoot}",
+        "program": "${workspaceRoot}/app/main.prod.js",
+        "stopOnEntry": false,
+        "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron",
+        "windows": {
+          "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron.cmd",
+          "runtimeArgs": [ 
+            "${workspaceRoot}/app",
+            "--enable-logging" 
+          ],
+        },
+        "args" : ["."]
+      },
+      {
+        "name": "Debug",
+        "type": "chrome",
+        "request": "launch",
+        "cwd": "${workspaceRoot}",
+        "program": "${workspaceRoot}/app/main.prod.js",
+        "stopOnEntry": false,
+        "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron",
+        "windows": {
+          "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron.cmd",
+          "runtimeArgs": [ 
+            "${workspaceRoot}/app",            
+            "--enable-logging",
+            "--remote-debugging-port=9222"
+          ],
+        },
+        "args" : ["."]
+      },
+      {
+        "name": "Attach",
+        "type": "node",
+        "request": "attach",
+        "port": 5858,
+        "sourceMaps": false,
+        "outDir": null
+    },
+    {
+      "name": "Attach to Process",
+      "type": "chrome",
+      "request": "attach",
+      "port": 9222,
+     }
+    ]
+  }
