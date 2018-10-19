@@ -23,6 +23,12 @@ coverage
 build/Release
 .eslintcache
 
+# Compiled net core items
+api/bin
+api/obj
+migcheck/bin
+migcheck/obj
+
 # Dependency directory
 # https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git
 node_modules

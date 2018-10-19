@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import routes from '../constants/routes';
 import styles from './Home.css';
 
+
 type Props = {};
 
 export default class Home extends Component<Props> {
@@ -57,9 +58,10 @@ launchLocalExe = () => {
   var exec = require('child_process').exec;   
   var path = require('path');
   var currWorkingDir = process.cwd();
-  var exeName = 'SimpleConsoleApp.exe';
-  var exePath = path.join(currWorkingDir, exeName);
+/*
   //launch without full path hoping .exe is in the right place
+    var exeName = 'SimpleConsoleApp.exe';
+  var exePath = path.join(currWorkingDir, exeName);
    exec(exeName, function(error, stdout, stderr) {
      if(stderr.length === 0 && stdout.length === 0) {
        alert(`stderr and stdout were empty`);
@@ -71,14 +73,18 @@ launchLocalExe = () => {
       stdout: ${stdout}`);
      }                  
     });
-  //launch using path to .exe
+    */
+
+  //launch using path to .exe     
+  var exePath = path.join(currWorkingDir, '\\migcheck\\bin\\dist\\win\\migcheck.exe');
+  alert(`Using crafted path: ${exePath}`);
   exec(exePath, function(error, stdout, stderr) {
     if(stderr.length === 0 && stdout.length === 0) {
       alert(`stderr and stdout were empty`);
     } else {
      console.log(`stderr: ${stderr}`);
      console.log(`stdout: ${stdout}`);
-     alert(`Launching using "${exePath}" as path
+     alert(`Launched using crafted "${exePath}" as path
      stderr: ${stderr}
      stdout: ${stdout}`);
     }                  
@@ -88,10 +94,10 @@ launchLocalExe = () => {
 readAFile = () => {
   var path = require('path');
   var fs = require('fs');
-  var xmldoc = require('xmldoc');
-  var appHostConfigLocation = path.join(process.env.SystemRoot, "System32\\inetsrv\\config\\applicationHost.config");
+  //var xmldoc = require('xmldoc');
+  //var appHostConfigLocation = path.join(process.env.SystemRoot, "System32\\inetsrv\\config\\applicationHost.config");
   var randomTempFile = "e:\\TEMP\\foo.txt";
-  alert(`crafted apphost.config path: ${appHostConfigLocation}`);
+  alert(`Attempting to read random file at ${randomTempFile}`)  
   fs.readFile( randomTempFile, (error, data) => {     
     if(error) { 
       alert(error); 
@@ -99,10 +105,6 @@ readAFile = () => {
     }        
     console.log("File content was: " + data);
     alert(data);
-   // var siteNode = configurationNode.decendantWithPath("system.applicationHost.sites.site")
-   // var fileContents = new XMLDocument() data); 
-    //alert("end");
-    // configuration\system.applicationHost\sites collection site elements with name attribute has site name
   });
 }
 
@@ -112,19 +114,19 @@ getSystemInfo = () => {
   alert(
   `os.release ${os.release()}
   os.type ${os.type()}
-  process.cwd: ${process.cwd()}
-  process.env.SystemDirectory: ${process.env.SystemDirectory}
+  process.cwd: ${process.cwd()}  
   process.env.SystemRoot: ${process.env.SystemRoot}
   process.env.SystemDrive: ${process.env.SystemDrive}
-  crafted apphost.config path: ${path.join(process.env.SystemRoot, "System32\\inetsrv\\config\\applicationHost.config")}
-  __dirname? : ${__dirname}`
+  __dirname : ${__dirname}
+  crafted apphost.config path: ${path.join(process.env.SystemRoot, "System32\\inetsrv\\config\\applicationHost.config")}`
   );
 }
 
   launchExe = () => {
-     var exec = require('child_process').exec;
-     //var executablePath = "C:\\Windows\\System32\\notepad.exe"
-     var executablePath = "C:\\Windows\\System32\\cmd.exe /K start C:\\Windows\\System32\\cmd.exe"
+     var exec = require('child_process').exec;     
+     var path = require('path');
+     var cmdExePath = path.join(process.env.SystemRoot, "\\System32\\cmd.exe");
+     var executablePath = cmdExePath + " /K start " + cmdExePath;
   exec(executablePath, (error, stdout, stderr) => {
   if (error) {
     console.error(`exec error: ${error}`);
@@ -139,9 +141,6 @@ getSystemInfo = () => {
     }
 
     tryGetTestApiData = () => {
-     
-   alert(`foo`);
-
    Axios.get('http://localhost:5000/api/test')
    .then( function(response) {
      console.log(response.data);
@@ -179,29 +178,30 @@ getSystemInfo = () => {
   */
   render() {
    // const { testApiData } = this.state;
-    return (
+    return (      
       <div className={styles.container} data-tid="container">
         <h2>Home</h2>
         <Link to={routes.COUNTER}>to Counter</Link>
         <br />
         <Link to={routes.KTEST}>to K Test Page</Link>
-        <br /><br />
-        <button type="TestExeButton" onClick={this.launchExe}>Launch an exe (cmd.exe)</button>
-        <br /><br />
-        <button type="TestAdminButton" onClick={this.checkIfAdmin}>Running as Admin?</button>
+        <br />
+        <br />        
+        <button onClick={this.launchExe}>Launch cmd prompt</button>
+        <br />        
+        <br />
+        <button type="TestAdminButton" onClick={this.checkIfAdmin}>Check if running as Admin</button>
         <br /><br />
         <button type="OtherTestButton" onClick={this.getSystemInfo}>Try get system info</button>
         <br /><br />
-        <button type="OtherTestButton2" onClick={this.launchLocalExe}>Other Test - localExe?</button>
-        <br /><br />
-        <button type="TryGetApiData" onClick={this.tryGetTestApiData}>Try get API response</button>        
+        <button type="OtherTestButton2" onClick={this.launchLocalExe}>Run migcheck.exe</button>
         <br /><br />
         <button type="StartApi" onClick={this.startApi}>Start API (localhost:5000/api/test)</button>
         <br /><br />
+        <button type="TryGetApiData" onClick={this.tryGetTestApiData}>Try get API response</button>        
+        <br /><br />        
         <button type="TestFileReads" onClick={this.readAFile}>Read a file</button>
         <br />        
-
-      </div>
+      </div>      
     );
   }
 }
